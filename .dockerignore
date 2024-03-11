@@ -1,0 +1,21 @@
+# Exclude typical unnecessary files
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.swp
+*.bak
+*.tmp
+.venv
+venv
+ENV
+Dockerfile
+README.md
+
+# pyproject.toml should NOT be excluded as its needed
+# to install dependencies in the container:
+!pyproject.toml
+!poetry.lock
+
+
+.local.env

@@ -1,0 +1,29 @@
+version: "3.9"
+
+name: webhooks
+
+services:
+  cf-tunnel-webhooks:
+    restart: unless-stopped
+    container_name: "cf-tunnel-webhooks"
+    image: cloudflare/cloudflared:latest
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiMDUxOWQ3YzU3ODhiNTM2ZGZlZDRmNTVjYWNjYTM2YjEiLCJ0IjoiZGUyMTlhOTAtY2M4MC00YTUzLWJkZjctMTQwNGRlNGFjNzhmIiwicyI6Ik56WXpaRGd4TWpjdFpUTmhZaTAwTURReUxUZzRZVEl0WWpFeU5XTXlPRFJqTTJFNSJ9
+
+  webhooks:
+    container_name: webhooks
+    image: webhooks:latest
+    platform: linux/amd64
+    build: .
+    ports:
+      - 8085:8085
+    volumes:
+      - ./app:/app/app
+      - ./interface:/app/interface
+      - ./logs:/app/logs
+      # - ./db.sqlite3:/app/db.sqlite3
+    env_file:
+      - .local.env
+    command: >
+      sh -c "uvicorn interface.web.main:create_app --reload --host 0.0.0.0 --port 8085"
